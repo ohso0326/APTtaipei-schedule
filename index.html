@@ -368,7 +368,7 @@
   <header>
     <p class="eyebrow">Taipei · 12–29 Nov 2026</p>
     <h1>APT Championship<br>全イベント一覧</h1>
-    <p class="sub">サテライトを含む全トーナメント・エントリーフィー順に色分け</p>
+    <p class="sub">各フライト独立カウント・サテライト含む全トーナメント</p>
     <div class="legend">
       <span>安い</span>
       <div class="legend-bar"></div>
@@ -414,69 +414,84 @@ window.addEventListener('error', (e)=>{
 
 const RATE = 5.0; // TWD -> JPY 概算レート
 
-// ── championship (Event 0–22, 1001, 1003, 1008含む) ──
-const champEvents = [
-  {id:"Ev.0", day:"11/12", name:"Asia Gaming Industry Championship", fee:13000, start:"14:00", regClose:"17:50", days:"11/12", note:"シリーズ開幕戦・Freezeout"},
+// ── 元のトーナメント定義 ──
+const rawEvents = [
+  {id:"Ev.0", day:"11/12", name:"Asia Gaming Industry Championship", fee:13000, start:"14:00", regClose:"17:50", days:"11/12", note:"シリーズ開幕戦・Freezeout", champ:true},
   {
-    id:"#1001", day:"11/13", name:"National Cup Championship TWD 20,000,000 GTD", fee:16000, start:"11:00", regClose:"18:20", days:"11/13–15", gtd:"20,000,000", seats:1,
+    id:"#1001", name:"National Cup Championship TWD 20,000,000 GTD", fee:16000, gtd:"20,000,000", seats:1, champ:true,
     flights: [
-      { name: "Flight A", date: "11/13 11:00-18:20", level: "35分", late: "1k-1.5k (27BB)" },
-      { name: "Flight B", date: "11/13 20:00-22:45", level: "15分", late: "1k-1.5k (27BB)" },
-      { name: "Flight C", date: "11/14 11:00-15:40", level: "25分", late: "1k-1.5k (27BB)" },
-      { name: "Flight D", date: "11/14 16:30-20:20", level: "20分", late: "1k-1.5k (27BB)" },
-      { name: "Flight E", date: "11/14 20:30-23:15", level: "15分", late: "1k-1.5k (27BB)" },
-      { name: "Day 2", date: "11/15 11:15-", level: "30分" }
+      { flightName: "Flight A", day: "11/13", start: "11:00", regClose: "18:20", level: "35分", late: "1k-1.5k (27BB)" },
+      { flightName: "Flight B", day: "11/13", start: "20:00", regClose: "22:45", level: "15分", late: "1k-1.5k (27BB)" },
+      { flightName: "Flight C", day: "11/14", start: "11:00", regClose: "15:40", level: "25分", late: "1k-1.5k (27BB)" },
+      { flightName: "Flight D", day: "11/14", start: "16:30", regClose: "20:20", level: "20分", late: "1k-1.5k (27BB)" },
+      { flightName: "Flight E", day: "11/14", start: "20:30", regClose: "23:15", level: "15分", late: "1k-1.5k (27BB)" }
     ],
-    stack: "40,000", itm: "14%", note: "DeepRun協賛・フライトA–E"
+    targetDay2: "11/15 11:15", stack: "40,000", itm: "14%", note: "DeepRun協賛"
   },
-  {id:"Ev.2", day:"11/15", name:"Mystery Bounty Championship", fee:35000, start:"11:15", regClose:"15:55", days:"11/15–16", gtd:"15,000,000", seats:1, note:"Natural8協賛・最大2エントリー・ミステリーバウンティ"},
+  {id:"Ev.2", day:"11/15", name:"Mystery Bounty Championship", fee:35000, start:"11:15", regClose:"15:55", days:"11/15–16", gtd:"15,000,000", seats:1, note:"Natural8協賛・最大2エントリー・ミステリーバウンティ", champ:true},
   {
-    id:"#1003", day:"11/16", name:"Ultra Stack Championship - TWD 25,000,000 GTD", fee:25000, start:"11:00", regClose:"16:30", days:"11/16–18", gtd:"25,000,000", seats:2,
+    id:"#1003", name:"Ultra Stack Championship - TWD 25,000,000 GTD", fee:25000, gtd:"25,000,000", seats:2, champ:true,
     flights: [
-      { name: "Flight A", date: "11/16 11:00-16:30", level: "30分", late: "2k-4k (25BB)" },
-      { name: "Flight B", date: "11/16 16:00-19:50", level: "20分", late: "2k-4k (25BB)" },
-      { name: "Flight C", date: "11/16 20:00-22:45", level: "15分", late: "2k-4k (25BB)" },
-      { name: "Flight D", date: "11/17 11:00-16:30", level: "30分", late: "2k-4k (25BB)" },
-      { name: "Flight E", date: "11/17 16:00-19:50", level: "20分", late: "2k-4k (25BB)" },
-      { name: "Flight F", date: "11/17 20:00-22:45", level: "15分", late: "2k-4k (25BB)" },
-      { name: "Day 2", date: "11/18 11:15-", level: "30分", late: "スタートブラインド 20k-40k" }
+      { flightName: "Flight A", day: "11/16", start: "11:00", regClose: "16:30", level: "30分", late: "2k-4k (25BB)" },
+      { flightName: "Flight B", day: "11/16", start: "16:00", regClose: "19:50", level: "20分", late: "2k-4k (25BB)" },
+      { flightName: "Flight C", day: "11/16", start: "20:00", regClose: "22:45", level: "15分", late: "2k-4k (25BB)" },
+      { flightName: "Flight D", day: "11/17", start: "11:00", regClose: "16:30", level: "30分", late: "2k-4k (25BB)" },
+      { flightName: "Flight E", day: "11/17", start: "16:00", regClose: "19:50", level: "20分", late: "2k-4k (25BB)" },
+      { flightName: "Flight F", day: "11/17", start: "20:00", regClose: "22:45", level: "15分", late: "2k-4k (25BB)" }
     ],
-    stack: "100,000", itm: "14%", note: "フライトA–F・ディープスタック"
+    targetDay2: "11/18 11:15", stack: "100,000", itm: "14%", note: "ディープスタック"
   },
-  {id:"Ev.4", day:"11/16", name:"7-Max Championship", fee:85000, start:"12:00", regClose:"22:05", days:"11/16–17", seats:1, note:"7人制テーブル・1リエントリー"},
-  {id:"Ev.5", day:"11/17", name:"PLO Championship", fee:70000, start:"15:00", regClose:"22:25", days:"11/17–18", note:"1リエントリー・オマハ選手権"},
-  {id:"Ev.6", day:"11/18", name:"PLO High Roller Championship", fee:165000, start:"11:15", regClose:"22:25", days:"11/18–19", note:"ハイローラーオマハ"},
-  {id:"Ev.7", day:"11/18", name:"Natural8 Cup Championship", fee:102900, start:"15:00", regClose:"23:45", days:"11/18–21", gtd:"35,000,000", seats:2, note:"Natural8協賛・Freezeout 3Day"},
+  {id:"Ev.4", day:"11/16", name:"7-Max Championship", fee:85000, start:"12:00", regClose:"22:05", days:"11/16–17", seats:1, note:"7人制テーブル・1リエントリー", champ:true},
+  {id:"Ev.5", day:"11/17", name:"PLO Championship", fee:70000, start:"15:00", regClose:"22:25", days:"11/17–18", note:"1リエントリー・オマハ選手権", champ:true},
+  {id:"Ev.6", day:"11/18", name:"PLO High Roller Championship", fee:165000, start:"11:15", regClose:"22:25", days:"11/18–19", note:"ハイローラーオマハ", champ:true},
+  {id:"Ev.7", day:"11/18", name:"Natural8 Cup Championship", fee:102900, start:"15:00", regClose:"23:45", days:"11/18–21", gtd:"35,000,000", seats:2, note:"Natural8協賛・Freezeout 3Day", champ:true},
   {
-    id:"#1008", day:"11/19", name:"Micro Main Event Championship", fee:16000, start:"11:00", regClose:"15:40", days:"11/19–21", seats:1,
+    id:"#1008", name:"Micro Main Event Championship", fee:16000, seats:1, champ:true,
     flights: [
-      { name: "Flight A", date: "11/19 11:00-15:30", level: "25分", late: "800-1.6k (25BB)" },
-      { name: "Flight B", date: "11/19 16:30-20:20", level: "20分", late: "800-1.6k (25BB)" },
-      { name: "Flight C", date: "11/19 20:30-23:15", level: "15分", late: "800-1.6k (25BB)" },
-      { name: "Flight D", date: "11/20 11:00-15:40", level: "25分", late: "800-1.6k (25BB)" },
-      { name: "Flight E", date: "11/20 16:30-20:20", level: "20分", late: "800-1.6k (25BB)" },
-      { name: "Flight F", date: "11/20 20:30-23:15", level: "15分", late: "800-1.6k (25BB)" },
-      { name: "Day 2", date: "11/21 11:15-", level: "30分", late: "スタートブラインド 8k-16k" }
+      { flightName: "Flight A", day: "11/19", start: "11:00", regClose: "15:30", level: "25分", late: "800-1.6k (25BB)" },
+      { flightName: "Flight B", day: "11/19", start: "16:30", regClose: "20:20", level: "20分", late: "800-1.6k (25BB)" },
+      { flightName: "Flight C", day: "11/19", start: "20:30", regClose: "23:15", level: "15分", late: "800-1.6k (25BB)" },
+      { flightName: "Flight D", day: "11/20", start: "11:00", regClose: "15:40", level: "25分", late: "800-1.6k (25BB)" },
+      { flightName: "Flight E", day: "11/20", start: "16:30", regClose: "20:20", level: "20分", late: "800-1.6k (25BB)" },
+      { flightName: "Flight F", day: "11/20", start: "20:30", regClose: "23:15", level: "15分", late: "800-1.6k (25BB)" }
     ],
-    stack: "40,000", itm: "14%", note: "フライトA–F・マイクロメイン"
+    targetDay2: "11/21 11:15", stack: "40,000", itm: "14%", note: "マイクロメイン"
   },
-  {id:"Ev.9", day:"11/19", name:"Single Day High Roller Championship", fee:311900, start:"12:00", regClose:"18:15", days:"11/19", seats:1, note:"1日完結ハイローラー"},
-  {id:"Ev.10", day:"11/19", name:"APT Women's Championship", fee:35000, start:"15:30", regClose:"22:55", days:"11/19–20", note:"LIPS協賛・女性限定・1リエントリー"},
-  {id:"Ev.11", day:"11/20", name:"Super High Roller Championship", fee:779900, start:"12:00", regClose:"24:00", days:"11/20–22", seats:3, note:"ダブルリエントリー・最高峰レベル"},
-  {id:"Ev.12", day:"11/20", name:"Mixed Games Championship", fee:70000, start:"15:00", regClose:"21:05", days:"11/20–21", note:"9ゲームミックス・1リエントリー"},
-  {id:"Ev.13", day:"11/22", name:"Superstar Championship", fee:1500000, start:"12:00", regClose:"21:20", days:"11/22–23", seats:3, note:"最高額イベント・1リエントリー"},
-  {id:"Ev.14", day:"11/23", name:"APT Championship Main Event", fee:311900, start:"11:00", regClose:"22:45", days:"11/23–27", gtd:"165,000,000", seats:3, note:"シリーズ本命・Freezeout 4Day"},
-  {id:"Ev.15", day:"11/24", name:"Mini Main Event Championship", fee:35000, start:"14:00", regClose:"18:40", days:"11/24–26", note:"フライトA–D"},
-  {id:"Ev.16", day:"11/25", name:"Micro High Roller Championship", fee:160000, start:"12:00", regClose:"23:10", days:"11/25–26"},
-  {id:"Ev.17", day:"11/26", name:"Teams Championship", fee:35000, start:"11:00", regClose:"16:30", days:"11/26", note:"2人1チーム制（合計70K/チーム）"},
-  {id:"Ev.18", day:"11/26", name:"High Roller Championship", fee:467900, start:"12:00", regClose:"24:00", days:"11/26–28"},
-  {id:"Ev.19", day:"11/27", name:"Freezeout Championship", fee:65000, start:"11:00", regClose:"19:10", days:"11/27–28", note:"フリーズアウト（再エントリー不可）"},
-  {id:"Ev.20", day:"11/27", name:"Mini High Roller Championship", fee:233900, start:"18:00", regClose:"00:50", days:"11/27–29"},
-  {id:"Ev.21", day:"11/28", name:"Turbo Championship", fee:35000, start:"11:00", regClose:"14:50", days:"11/28"},
-  {id:"Ev.22", day:"11/28", name:"Trip Saver Championship", fee:50000, start:"16:30", regClose:"23:40", days:"11/28–29", gtd:"5,000,000"},
-].map(e=>({...e, champ:true}));
+  {id:"Ev.9", day:"11/19", name:"Single Day High Roller Championship", fee:311900, start:"12:00", regClose:"18:15", days:"11/19", seats:1, note:"1日完結ハイローラー", champ:true},
+  {id:"Ev.10", day:"11/19", name:"APT Women's Championship", fee:35000, start:"15:30", regClose:"22:55", days:"11/19–20", note:"LIPS協賛・女性限定・1リエントリー", champ:true},
+  {id:"Ev.11", day:"11/20", name:"Super High Roller Championship", fee:779900, start:"12:00", regClose:"24:00", days:"11/20–22", seats:3, note:"ダブルリエントリー・最高峰レベル", champ:true},
+  {id:"Ev.12", day:"11/20", name:"Mixed Games Championship", fee:70000, start:"15:00", regClose:"21:05", days:"11/20–21", note:"9ゲームミックス・1リエントリー", champ:true},
+  {id:"Ev.13", day:"11/22", name:"Superstar Championship", fee:1500000, start:"12:00", regClose:"21:20", days:"11/22–23", seats:3, note:"最高額イベント・1リエントリー", champ:true},
+  {
+    id:"Ev.14", name:"APT Championship Main Event", fee:311900, gtd:"165,000,000", seats:3, champ:true,
+    flights: [
+      { flightName: "Day 1A", day: "11/23", start: "11:00", regClose: "22:45", level: "60分" },
+      { flightName: "Day 1B", day: "11/24", start: "11:00", regClose: "22:45", level: "60分" },
+      { flightName: "Day 1C", day: "11/25", start: "11:00", regClose: "22:45", level: "60分" },
+      { flightName: "Day 1D Turbo", day: "11/25", start: "18:00", regClose: "23:30", level: "30分" }
+    ],
+    targetDay2: "11/26 11:00", note: "シリーズ本命・Freezeout"
+  },
+  {
+    id:"Ev.15", name:"Mini Main Event Championship", fee:35000, champ:true,
+    flights: [
+      { flightName: "Flight A", day: "11/24", start: "14:00", regClose: "18:40", level: "30分" },
+      { flightName: "Flight B", day: "11/24", start: "19:00", regClose: "22:15", level: "20分" },
+      { flightName: "Flight C", day: "11/25", start: "11:00", regClose: "15:40", level: "30分" },
+      { flightName: "Flight D", day: "11/25", start: "16:00", regClose: "19:15", level: "20分" }
+    ],
+    targetDay2: "11/26 11:15"
+  },
+  {id:"Ev.16", day:"11/25", name:"Micro High Roller Championship", fee:160000, start:"12:00", regClose:"23:10", days:"11/25–26", champ:true},
+  {id:"Ev.17", day:"11/26", name:"Teams Championship", fee:35000, start:"11:00", regClose:"16:30", days:"11/26", note:"2人1チーム制（合計70K/チーム）", champ:true},
+  {id:"Ev.18", day:"11/26", name:"High Roller Championship", fee:467900, start:"12:00", regClose:"24:00", days:"11/26–28", champ:true},
+  {id:"Ev.19", day:"11/27", name:"Freezeout Championship", fee:65000, start:"11:00", regClose:"19:10", days:"11/27–28", note:"フリーズアウト（再エントリー不可）", champ:true},
+  {id:"Ev.20", day:"11/27", name:"Mini High Roller Championship", fee:233900, start:"18:00", regClose:"00:50", days:"11/27–29", champ:true},
+  {id:"Ev.21", day:"11/28", name:"Turbo Championship", fee:35000, start:"11:00", regClose:"14:50", days:"11/28", champ:true},
+  {id:"Ev.22", day:"11/28", name:"Trip Saver Championship", fee:50000, start:"16:30", regClose:"23:40", days:"11/28–29", gtd:"5,000,000", champ:true},
+];
 
-// ── side events ──
+// ── サイドイベントデータ ──
 const sideRaw = {
 "11/13":[
   ["#1","NL Hold'em - Heads Up (64 Cap)",10000,"11:05","11:15"],
@@ -678,16 +693,60 @@ const sideRaw = {
 ],
 };
 
-const sideEvents = [];
+// ── フライト展開処理（各Day1を独立したイベントとして展開） ──
+const expandedEvents = [];
+
+rawEvents.forEach(e => {
+  if (e.flights && e.flights.length > 0) {
+    e.flights.forEach(f => {
+      expandedEvents.push({
+        id: e.id,
+        day: f.day,
+        name: `${e.name} (${f.flightName})`,
+        fee: e.fee,
+        start: f.start,
+        regClose: f.regClose,
+        late: f.late,
+        level: f.level,
+        champ: e.champ,
+        gtd: e.gtd,
+        seats: e.seats,
+        stack: e.stack,
+        itm: e.itm,
+        note: e.note,
+        targetDay2: e.targetDay2,
+        multiDay: true,
+        flightName: f.flightName
+      });
+    });
+  } else {
+    expandedEvents.push({
+      ...e,
+      multiDay: !!(e.days && /–/.test(e.days))
+    });
+  }
+});
+
 Object.keys(sideRaw).forEach(day=>{
   sideRaw[day].forEach(([id,name,fee,start,regClose,extra])=>{
-    sideEvents.push({id, day, name, fee, start, regClose, champ:false, ...(extra||{})});
+    expandedEvents.push({
+      id, day, name, fee, start, regClose, champ:false,
+      multiDay: false,
+      ...(extra||{})
+    });
   });
 });
 
-const allEvents = [...champEvents, ...sideEvents].sort((a,b)=>{
+const allEvents = expandedEvents.sort((a,b)=>{
   const da = a.day.split('/').map(Number), db = b.day.split('/').map(Number);
   if(da[1]!==db[1]) return da[1]-db[1];
+  if(da[0]!==db[0]) return da[0]-db[0];
+  
+  // 開始時間順
+  if (a.start && b.start && a.start !== b.start) {
+    return a.start.localeCompare(b.start);
+  }
+  
   if(a.champ !== b.champ) return a.champ ? -1 : 1;
   const na = parseInt((a.id.match(/\d+/)||[0])[0]);
   const nb = parseInt((b.id.match(/\d+/)||[0])[0]);
@@ -703,19 +762,15 @@ function classify(name){
   return 'NLH';
 }
 
-allEvents.forEach(e => {
+allEvents.forEach((e, idx) => {
   e.type = classify(e.name);
-  e.key = e.id + '|' + e.day;
+  e.key = `${e.id}_${e.day}_${e.start || ''}_${e.flightName || ''}`;
   
   const n = e.name.toLowerCase();
   e.bounty = /bounty/i.test(n);
   e.hu = /heads up/i.test(n);
   e.ladies = /women'?s/i.test(n);
   e.sat = e.sat || /satellite/i.test(n);
-  
-  const hasDayRange = e.days && /–/.test(e.days);
-  const hasDayLabelInName = /\(Day\s*1\)/i.test(e.name);
-  e.multiDay = !!(hasDayRange || hasDayLabelInName || (e.flights && e.flights.length > 0));
 });
 
 // ── fee tier ──
@@ -747,23 +802,15 @@ function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
 
 // ── ブラインドストラクチャー推定 ──
 function estimateStructure(e){
+  if(e.level) return {desc: `レベル: ${e.level}`};
   const n = e.name.toLowerCase();
-  if(/super hyper turbo/.test(n)) return {before:5, after:5, desc:"超高速 5分ブラインド"};
-  if(/hyper turbo/.test(n)) return {before:10, after:8, desc:"高速 8~10分ブラインド"};
-  if(/turbo/.test(n)) return {before:15, after:12, desc:"ターボ 12~15分ブラインド"};
-  if(e.champ && e.multiDay) return {before:40, after:40, desc:"ロングストラクチャー 30~40分ブラインド"};
-  if(e.champ || e.fee >= 100000) return {before:30, after:25, desc:"スタンダード 25~30分ブラインド"};
-  if(/single day|towering|super stack/i.test(n)) return {before:25, after:20, desc:"ディープ 20~25分ブラインド"};
-  return {before:20, after:15, desc:"通常 15~20分ブラインド"};
-}
-
-function expandDayRange(str){
-  const m = str.match(/^(\d+)\/(\d+)–(\d+)$/);
-  if(!m) return [str];
-  const month = m[1], startDay = parseInt(m[2],10), endDay = parseInt(m[3],10);
-  const out = [];
-  for(let d=startDay; d<=endDay; d++) out.push(`${month}/${d}`);
-  return out;
+  if(/super hyper turbo/.test(n)) return {desc:"超高速 5分ブラインド"};
+  if(/hyper turbo/.test(n)) return {desc:"高速 8~10分ブラインド"};
+  if(/turbo/.test(n)) return {desc:"ターボ 12~15分ブラインド"};
+  if(e.champ && e.multiDay) return {desc:"ロングストラクチャー 30~60分ブラインド"};
+  if(e.champ || e.fee >= 100000) return {desc:"スタンダード 25~30分ブラインド"};
+  if(/single day|towering|super stack/i.test(n)) return {desc:"ディープ 20~25分ブラインド"};
+  return {desc:"通常 15~20分ブラインド"};
 }
 
 const listEl = document.getElementById('list');
@@ -893,19 +940,6 @@ function render(){
     const subAmount = currency === 'TWD' ? `≈¥${jpy}` : `≈TWD ${twd}`;
     const isFav = favorites.has(e.key);
     const structure = estimateStructure(e);
-    
-    // フライト情報または日程構築
-    let dayListHtml = '';
-    if (e.flights && e.flights.length > 0) {
-      dayListHtml = e.flights.map(f => 
-        `<div class="flight-line"><b>${f.name}</b>: ${f.date} (Lv: ${f.level}${f.late ? ` / RegLate: ${f.late}` : ''})</div>`
-      ).join('');
-    } else {
-      const dayList = e.multiDay && e.days ? expandDayRange(e.days) : null;
-      dayListHtml = dayList
-        ? dayList.map((d,i)=>`<div class="flight-line">Day ${i+1}（${d}）${i===0 ? ' ・ この日にエントリー開始' : ''}</div>`).join('')
-        : `<div class="flight-line">${e.days || e.day}</div>`;
-    }
       
     // タグ表示の構築
     const multiTag = e.multiDay ? '<span class="tag MULTI">2Days+</span>' : '';
@@ -929,10 +963,12 @@ function render(){
       <div class="detail">
         <div class="detail-inner">
           <dl class="detail-grid">
-            <dt>日程/フライト</dt><dd>${dayListHtml}</dd>
+            <dt>開催日</dt><dd>${e.day}</dd>
             ${e.start ? `<dt>スタート</dt><dd>${e.start}</dd>` : ''}
             ${e.regClose ? `<dt>レイトレジ締切</dt><dd>${e.regClose}${e.regClose < e.start ? '（翌日）' : ''}</dd>` : ''}
             ${e.late ? `<dt>レイト時ブラインド</dt><dd>${e.late}</dd>` : ''}
+            ${e.targetDay2 ? `<dt>Day 2 日程</dt><dd>${e.targetDay2}</dd>` : ''}
+            ${e.days ? `<dt>全体日程</dt><dd>${e.days}</dd>` : ''}
             ${e.stack ? `<dt>Starting Stack</dt><dd>${e.stack}</dd>` : ''}
             ${e.itm ? `<dt>ITM</dt><dd>${e.itm}</dd>` : ''}
             <dt>フィー帯</dt><dd>${tierLabel[e.tier]}</dd>
