@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="color-scheme" content="dark">
+<title>APT Championship Taipei 2026</title>
+<style>
+  :root{
+    color-scheme: dark;
+    --bg: #0B0F17;
+    --card: #141B27;
+    --card-border: #232C3B;
+    --ink: #FBFAF7;
+    --ink-dim: #B6BDCC;
+    --ink-faint: #8891A3;
+    --blue: #5B9BF0;
+    --red: #FF5A67;
+    --gold: #E3BE7C;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  button{
+    -webkit-appearance:none;
+    appearance:none;
+    font-family:inherit;
+  }
+  html,body{margin:0;padding:0;min-height:100%;background-color:#0B0F17 !important;color:#FBFAF7 !important;
+    font-family:-apple-system,'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif; -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;}
+
+  .wrap{max-width:640px;margin:0 auto;padding:0 0 56px;background-color:#0B0F17;min-height:100vh;}
+
+  header{
+    padding:26px 20px 18px;
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 140% at 15% -10%, rgba(91,155,240,0.20), transparent 55%),
+      radial-gradient(120% 140% at 85% -10%, rgba(255,90,103,0.20), transparent 55%),
+      var(--bg);
+    border-bottom:1px solid var(--card-border);
+  }
+  .eyebrow{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin:0 0 8px;
+  }
+  h1{
+    font-family:Georgia,'Hiragino Mincho ProN','Yu Mincho',serif;
+    font-weight:600;
+    font-size:26px;
+    line-height:1.18;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-size:13px;
+    color:var(--ink-dim);
+    margin:0 0 16px;
+  }
+  .legend{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:10px;
+    color:var(--ink-faint);
+    margin-bottom:4px;
+  }
+  .legend-bar{
+    flex:1;
+    height:6px;
+    border-radius:3px;
+    background:linear-gradient(90deg, var(--blue), #BE96E6 50%, var(--red));
+  }
+  .count{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11px;
+    color:var(--ink-faint);
+    margin-top:10px;
+  }
+  .count b{color:var(--ink);}
+
+  .currency-toggle{
+    display:inline-flex;
+    margin-top:14px;
+    border:1px solid var(--card-border);
+    border-radius:100px;
+    background:var(--card);
+    padding:3px;
+    gap:2px;
+    cursor:pointer;
+  }
+  .cur-opt{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.04em;
+    padding:6px 16px;
+    border-radius:100px;
+    color:var(--ink-faint);
+    transition:background .15s ease, color .15s ease;
+  }
+  .cur-opt.active{
+    background:linear-gradient(90deg, var(--blue), #BE96E6);
+    color:#0B0F17;
+  }
+
+  .view-toggle{
+    display:flex;
+    gap:6px;
+    padding:12px 20px 0;
+  }
+  .view-btn{
+    flex:1;
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.03em;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--card-border);
+    background:var(--card);
+    color:var(--ink-dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .view-btn.active{
+    background:var(--ink);
+    color:var(--bg);
+    border-color:var(--ink);
+  }
+  .view-btn svg{width:14px;height:14px;}
+
+  .filter-group{padding:12px 20px 0;}
+  .filter-label{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:9.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 7px 2px;
+  }
+  .filters{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:4px;
+  }
+  .filters::-webkit-scrollbar{display:none;}
+  .chip-btn{
+    flex:none;
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11px;
+    letter-spacing:.03em;
+    padding:7px 13px;
+    border-radius:100px;
+    border:1px solid var(--card-border);
+    background:var(--card);
+    color:var(--ink-dim);
+    font-weight:500;
+  }
+  .chip-btn.active{
+    background:var(--ink);
+    color:var(--bg);
+    border-color:var(--ink);
+  }
+
+  .list{padding:6px 14px 0;}
+  .day-head{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--gold);
+    padding:18px 6px 6px;
+    border-top:1px solid var(--card-border);
+    margin-top:4px;
+  }
+  .list > .day-head:first-child{border-top:none; margin-top:0;}
+
+  .row{border-bottom:1px solid var(--card-border);}
+  .row-head{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:12px 6px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .num{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:11.5px;
+    color:var(--ink-faint);
+    width:38px;
+    flex:none;
+  }
+  .fee-dot{
+    width:9px;height:9px;border-radius:50%;
+    flex:none;
+    box-shadow:0 0 9px 1px var(--dotcolor,transparent);
+  }
+  .row-main{flex:1; min-width:0;}
+  .row-title{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    line-height:1.35;
+  }
+  .tag{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:9px;
+    letter-spacing:.04em;
+    padding:2px 5px;
+    border-radius:4px;
+    border:1px solid currentColor;
+    opacity:.9;
+    flex:none;
+  }
+  .tag.NLH{color:#86BBFF;}
+  .tag.PLO{color:#F2C15C;}
+  .tag.MIX{color:#C3A8FF;}
+  .tag.OTHER{color:#7FE0C0;}
+  .tag.MULTI{
+    color:var(--red);
+    border-color:var(--red);
+    background:rgba(255,90,103,0.10);
+    font-weight:700;
+  }
+  .tag.LADIES{
+    color:#F26FA3;
+    border-color:#F26FA3;
+    background:rgba(242,111,163,0.10);
+    font-weight:700;
+  }
+  .row.multi-day{
+    border-left:2px solid var(--red);
+    background:rgba(255,90,103,0.045);
+  }
+  .row.multi-day .row-head{padding-left:4px;}
+  .row-sub{
+    font-size:11.5px;
+    font-weight:500;
+    color:var(--ink-dim);
+    margin-top:2px;
+  }
+  .fee{
+    font-family:'SF Mono','Courier New',monospace;
+    font-weight:700;
+    font-size:13.5px;
+    flex:none;
+    text-align:right;
+    min-width:84px;
+  }
+  .fee small{font-size:9px;font-weight:400;color:var(--ink-faint);display:block;text-align:right;margin-top:1px;}
+
+  .chevron{
+    flex:none;
+    width:15px;height:15px;
+    color:var(--ink-faint);
+    transition:transform .25s ease;
+  }
+  .row.open .chevron{transform:rotate(180deg);}
+
+  .star-btn{
+    flex:none;
+    width:30px;height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+    cursor:pointer;
+  }
+  .star-btn svg{
+    width:18px;height:18px;
+    color:var(--ink-faint);
+    transition:transform .15s ease, color .15s ease;
+  }
+  .star-btn.fav svg{
+    color:var(--gold);
+    fill:var(--gold);
+    transform:scale(1.08);
+  }
+  .star-btn:active svg{transform:scale(0.85);}
+
+  .detail{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+  }
+  .row.open .detail{max-height:460px;}
+  .detail-inner{
+    padding:2px 6px 16px 55px;
+    font-size:13px;
+    color:var(--ink-dim);
+    line-height:1.75;
+  }
+  .detail-grid{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:4px 12px;
+    margin-top:4px;
+  }
+  .detail-grid dt{
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:10px;
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    white-space:nowrap;
+  }
+  .detail-grid dd{margin:0; color:var(--ink); font-weight:500;}
+  .flight-line{
+    color:var(--ink);
+    font-weight:500;
+    padding:2px 0;
+  }
+  .flight-line + .flight-line{
+    border-top:1px dashed var(--card-border);
+  }
+
+  .empty{
+    padding:60px 20px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:13px;
+  }
+
+  footer{
+    padding:24px 20px 0;
+    text-align:center;
+    font-family:'SF Mono','Courier New',monospace;
+    font-size:10px;
+    color:var(--ink-faint);
+    letter-spacing:.03em;
+    line-height:1.8;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Taipei · 12–29 Nov 2026</p>
+    <h1>APT Championship<br>全イベント一覧</h1>
+    <p class="sub">#0–#187（サテライト除く）・エントリーフィー順に色分け</p>
+    <div class="legend">
+      <span>安い</span>
+      <div class="legend-bar"></div>
+      <span>高い</span>
+    </div>
+    <button class="currency-toggle" id="currencyToggle">
+      <span class="cur-opt" data-cur="TWD">TWD</span>
+      <span class="cur-opt" data-cur="JPY">JPY</span>
+    </button>
+    <div class="count" id="count"></div>
+  </header>
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="viewAllBtn">全イベント</button>
+    <button class="view-btn" id="viewFavBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      お気に入り <span id="favCount"></span>
+    </button>
+  </div>
+
+  <div class="filter-group">
+    <p class="filter-label">ゲーム種別</p>
+    <div class="filters" id="filtersType"></div>
+  </div>
+  <div class="filter-group">
+    <p class="filter-label">フィー帯</p>
+    <div class="filters" id="filtersTier"></div>
+  </div>
+  <div class="filter-group">
+    <p class="filter-label">開催日数</p>
+    <div class="filters" id="filtersDuration"></div>
+  </div>
+  <div class="filter-group">
+    <p class="filter-label">参加対象</p>
+    <div class="filters" id="filtersAttr"></div>
+  </div>
+
+  <div class="list" id="list"></div>
+  <footer>Buy-in は TWD 表記／括弧内は概算 JPY（1 TWD ≒ 5.0 JPY）<br>時刻は台北現地時間・レイトレジ締切はフライトAを基準に記載<br>サテライト・ステップ satellite は非掲載</footer>
+</div>
+
+<script>
+window.addEventListener('error', (e)=>{
+  const list = document.getElementById('list');
+  if(list) list.innerHTML = '<div class="empty">読み込み中にエラーが発生しました。再読み込みしてください。<br><span style="opacity:.6">' + (e.message||'') + '</span></div>';
+});
+
+const RATE = 5.0; // TWD -> JPY 概算レート
+
+// ── championship (Event 0–22) ──
+const champEvents = [
+  {id:"Ev.0", day:"11/12", name:"Asia Gaming Industry Championship", fee:13000, start:"14:00", regClose:"17:50", days:"11/12", note:"シリーズ開幕戦・Freezeout"},
+  {id:"Ev.1", day:"11/13", name:"National Cup Championship", fee:16000, start:"11:00", regClose:"16:30", days:"11/13–15", gtd:"20,000,000", seats:1, note:"DeepRun協賛・フライトA–E"},
+  {id:"Ev.2", day:"11/15", name:"Mystery Bounty Championship", fee:35000, start:"11:15", regClose:"15:55", days:"11/15–16", gtd:"15,000,000", seats:1, note:"Natural8協賛・最大2エントリー"},
+  {id:"Ev.3", day:"11/16", name:"Ultra Stack Championship", fee:25000, start:"11:00", regClose:"15:40", days:"11/16–18", gtd:"25,000,000", seats:2, note:"フライトA–F"},
+  {id:"Ev.4", day:"11/16", name:"7-Max Championship", fee:85000, start:"12:00", regClose:"22:05", days:"11/16–17", seats:1, note:"7人制テーブル・1リエントリー"},
+  {id:"Ev.5", day:"11/17", name:"PLO Championship", fee:70000, start:"15:00", regClose:"22:25", days:"11/17–18", note:"1リエントリー"},
+  {id:"Ev.6", day:"11/18", name:"PLO High Roller Championship", fee:165000, start:"11:15", regClose:"22:25", days:"11/18–19"},
+  {id:"Ev.7", day:"11/18", name:"Natural8 Cup Championship", fee:102900, start:"15:00", regClose:"23:45", days:"11/18–21", gtd:"35,000,000", seats:2, note:"Natural8協賛・Freezeout 3Day"},
+  {id:"Ev.8", day:"11/19", name:"Micro Main Event Championship", fee:16000, start:"11:00", regClose:"15:40", days:"11/19–21", seats:1, note:"フライトA–F"},
+  {id:"Ev.9", day:"11/19", name:"Single Day High Roller Championship", fee:311900, start:"12:00", regClose:"18:15", days:"11/19", seats:1, note:"1日完結"},
+  {id:"Ev.10", day:"11/19", name:"APT Women's Championship", fee:35000, start:"15:30", regClose:"22:55", days:"11/19–20", note:"LIPS協賛・女性限定・1リエントリー"},
+  {id:"Ev.11", day:"11/20", name:"Super High Roller Championship", fee:779900, start:"12:00", regClose:"24:00", days:"11/20–22", seats:3, note:"ダブルリエントリー"},
+  {id:"Ev.12", day:"11/20", name:"Mixed Games Championship", fee:70000, start:"15:00", regClose:"21:05", days:"11/20–21", note:"9ゲームミックス・1リエントリー"},
+  {id:"Ev.13", day:"11/22", name:"Superstar Championship", fee:1500000, start:"12:00", regClose:"21:20", days:"11/22–23", seats:3, note:"最高額イベント・1リエントリー"},
+  {id:"Ev.14", day:"11/23", name:"APT Championship Main Event", fee:311900, start:"11:00", regClose:"22:45", days:"11/23–27", gtd:"165,000,000", seats:3, note:"シリーズ本命・Freezeout 4Day"},
+  {id:"Ev.15", day:"11/24", name:"Mini Main Event Championship", fee:35000, start:"14:00", regClose:"18:40", days:"11/24–26", note:"フライトA–D"},
+  {id:"Ev.16", day:"11/25", name:"Micro High Roller Championship", fee:160000, start:"12:00", regClose:"23:10", days:"11/25–26"},
+  {id:"Ev.17", day:"11/26", name:"Teams Championship", fee:35000, start:"11:00", regClose:"16:30", days:"11/26", note:"2人1チーム制（合計70K/チーム）"},
+  {id:"Ev.18", day:"11/26", name:"High Roller Championship", fee:467900, start:"12:00", regClose:"24:00", days:"11/26–28"},
+  {id:"Ev.19", day:"11/27", name:"Freezeout Championship", fee:65000, start:"11:00", regClose:"19:10", days:"11/27–28"},
+  {id:"Ev.20", day:"11/27", name:"Mini High Roller Championship", fee:233900, start:"18:00", regClose:"00:50", days:"11/27–29"},
+  {id:"Ev.21", day:"11/28", name:"Turbo Championship", fee:35000, start:"11:00", regClose:"14:50", days:"11/28"},
+  {id:"Ev.22", day:"11/28", name:"Trip Saver Championship", fee:50000, start:"16:30", regClose:"23:40", days:"11/28–29", gtd:"5,000,000"},
+].map(e=>({...e, champ:true}));
+
+// ── side events (numbered #, satellites excluded) ──
+const sideRaw = {
+"11/13":[
+  ["#1","NL Hold'em - Heads Up (64 Cap)",10000,"11:05","11:15"],
+  ["#2","PL Omaha High",16000,"11:30","16:10"],
+  ["#3","High Roller - The Opener (Day 1)",70000,"12:00","21:05"],
+  ["#4","Women's Event",3500,"16:00","19:50"],
+  ["#5","Fixed Limit - Triple Draw Mix (A-5, 2-7)",16000,"16:30","19:40"],
+  ["#7","Turbo - NL Omaha Hi-Lo (Big O)",10000,"19:30","21:30"],
+  ["#8","Turbo - High Roller",35000,"19:45","21:45"],
+  ["#9","Hyper Turbo Home Games - Rivers",3500,"21:00","22:25"],
+  ["#10","Hyper Turbo - NL Triple Draw Mix",6000,"22:00","23:25"],
+  ["#11","Hyper Turbo - High Roller",25000,"22:15","23:40"],
+  ["#12","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/14":[
+  ["#14","Fixed Limit - Omaha Hi-Lo (Big O)",16000,"11:30","14:40"],
+  ["#15","High Roller - Single Day",65000,"15:00","19:10"],
+  ["#16","Women's Event",3500,"16:00","19:50"],
+  ["#17","Fixed Limit - Super Stud Mix",16000,"16:15","19:25"],
+  ["#18","Hyper Turbo Home Games - Red River Hold'em",3500,"21:00","22:25"],
+  ["#19","Hyper Turbo - NL Omaha High (Stairway to Seven)",6000,"22:00","23:25"],
+  ["#20","Hyper Turbo - High Roller",30000,"22:15","23:40"],
+  ["#21","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/15":[
+  ["#23","PL Omaha Hi-Lo (Big O)",16000,"11:30","16:10"],
+  ["#24","High Roller - Single Day",165000,"11:45","18:00"],
+  ["#25","Sunday Super Stack",10000,"13:00","16:55"],
+  ["#26","Women's Event",6000,"16:00","19:50"],
+  ["#27","Fixed Limit - Seven Card Stud Mix",16000,"16:15","19:25"],
+  ["#29","Hyper Turbo Home Games - Super Hold'em",3500,"21:00","22:25"],
+  ["#30","Hyper Turbo - NL Omaha Hi-Lo (Stairway to Seven)",6000,"22:15","23:40"],
+  ["#31","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/16":[
+  ["#32","Mind Sports Week - Chess/Poker",5000,"11:05","11:15"],
+  ["#34","Masters Omaha - PL Omaha High",35000,"11:30","17:00"],
+  ["#35","Women's Event",8000,"16:00","19:50"],
+  ["#36","Fixed Limit - Dealer's Choice Triple Draw (7-Game)",16000,"16:15","19:25"],
+  ["#37","NL Hold'em - Freezeout (Bounty)",15000,"17:00","20:50"],
+  ["#38","Turbo - NL Omaha Hi-Lo (Big O)",10000,"20:00","22:00"],
+  ["#39","Hyper Turbo Home Games - 3-2-1",3500,"21:30","22:55"],
+  ["#40","Hyper Turbo - NL Triple Draw Mix (7-Game)",6000,"22:15","23:40"],
+  ["#41","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/17":[
+  ["#43","Mind Sports Week - Backgammon/Poker",5000,"11:05","11:15"],
+  ["#44","Tuesday Towering Stack",10000,"11:15","16:00"],
+  ["#45","Fixed Limit - Choose Your Own Adventure",10000,"11:30","14:40"],
+  ["#46","Single Day High Roller - Mystery Bounty",120000,"11:45","18:00"],
+  ["#47","Women's Event - Big Bounty",10000,"16:00","19:50"],
+  ["#48","Fixed Limit - R-O-S-E-T",16000,"16:15","19:25"],
+  ["#49","Turbo - NLH",11000,"19:00","21:00"],
+  ["#50","Hyper Turbo Home Games - Atomic Pineapple",3500,"21:15","22:40"],
+  ["#51","Hyper Turbo - NL Single Draw Mix",6000,"21:30","22:55"],
+  ["#52","Hyper Turbo - High Roller",30000,"22:00","23:25"],
+  ["#53","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/18":[
+  ["#54","NL Hold'em - Bounty",15000,"11:00","15:40"],
+  ["#56","Mind Sports Week - Chinese Chess/Poker",5000,"11:05","11:15"],
+  ["#57","Turbo - High Roller",50000,"11:15","13:15"],
+  ["#59","Dealer's Choice",16000,"11:45","14:55"],
+  ["#60","Women's Event",16000,"16:00","19:50"],
+  ["#61","Fixed Limit - 9-Game Badugi Mix",10000,"16:15","19:25"],
+  ["#62","NL Hold'em - Bounty (WTA)",10000,"17:00","20:50"],
+  ["#63","Turbo - NL Omaha Ultimate Hi-Lo (Cry Me A River)",10000,"20:00","22:00"],
+  ["#64","Hyper Turbo Home Games - Deuces Wild",3500,"21:00","22:25"],
+  ["#65","Hyper Turbo - NL 8-Game",6000,"22:15","23:40"],
+  ["#66","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/19":[
+  ["#67","Mind Sports - Go/Poker",5000,"11:05","11:15"],
+  ["#68","Masters Mix Games - 9-Game",35000,"11:30","16:00"],
+  ["#70","PL Omaha Hi-Lo (Big O)",16000,"17:00","20:50"],
+  ["#72","Hyper Turbo - NLH",10000,"21:30","22:55"],
+  ["#73","Hyper Turbo - NL Omaha Ultimate Hi-Lo (Double Board Bomb Pot)",3500,"21:45","23:10"],
+  ["#74","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/20":[
+  ["#76","High Roller - Ultra Stack (Day 1)",80000,"11:15","22:10",{seats:1}],
+  ["#77","PL Omaha High",16000,"11:30","16:10"],
+  ["#78","Women's Event",10000,"16:00","19:50"],
+  ["#79","Fixed Limit - Omaha Ultimate Hi-Lo (Cry Me A River)",10000,"16:15","19:25"],
+  ["#80","Hyper Turbo - Natural Eight's",8000,"21:00","22:25"],
+  ["#81","Hyper Turbo - NL Omaha High (Double Board Bomb Pot)",3500,"22:00","23:25"],
+  ["#82","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/21":[
+  ["#83","Hyper Turbo - Double Stack",10000,"11:00","12:25"],
+  ["#84","PL Omaha Hi-Lo (Big O) - Heads Up",16000,"11:05","11:15"],
+  ["#85","Fixed Limit - Triple Draw Mix (7-Game)",16000,"11:30","14:40"],
+  ["#86","High Roller - Single Day",165000,"11:45","18:00",{seats:1}],
+  ["#88","PL Omaha Hi-Lo (Big O)",16000,"16:00","19:50"],
+  ["#90","Turbo - High Roller",50000,"20:00","22:00"],
+  ["#91","Turbo - NL Omaha High (Win the Button)",10000,"20:15","22:15"],
+  ["#92","Hyper Turbo Home Games - Noah's Ark",3500,"21:00","22:25"],
+  ["#93","Hyper Turbo - NL Triple Draw (Super Badugi)",6000,"22:30","23:55"],
+  ["#94","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/22":[
+  ["#95","Sunday Super Stack - Bounty",16000,"11:00","14:55"],
+  ["#97","Women's Event - Heads Up",7000,"11:05","11:15"],
+  ["#98","Hyper Turbo - High Roller",35000,"11:15","12:40"],
+  ["#99","PL Omaha High - Heads Up",16000,"11:20","11:30"],
+  ["#100","Masters Draw Poker",35000,"11:30","16:00"],
+  ["#101","Hyper Turbo - NLH",3500,"11:45","13:10"],
+  ["#103","Women's Event - Freezeout",16000,"15:00","18:50"],
+  ["#104","PL Omaha High",16000,"16:00","19:50"],
+  ["#105","NL Hold'em",16000,"17:00","20:50"],
+  ["#107","Turbo - NL Courchevel Hi-Lo",10000,"20:15","22:15"],
+  ["#109","Hyper Turbo Home Games - Super Hold'em Oceans",3500,"21:15","22:40"],
+  ["#110","Hyper Turbo - NL R-O-S-E-T",6000,"21:30","22:55"],
+  ["#111","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/23":[
+  ["#112","NL Hold'em - Freezeout",16000,"11:15","15:55"],
+  ["#113","PL Omaha Hi-Lo (Big O) - Big Bounty",16000,"11:30","16:10"],
+  ["#115","Women's Event",11000,"16:00","19:50"],
+  ["#116","NL Hold'em - 1 Re-Entry",13000,"17:00","20:50"],
+  ["#118","Turbo - NL Omaha High (Red Rivers)",10000,"20:00","22:00"],
+  ["#119","Hyper Turbo Home Games - Crazy Irish",3500,"21:15","22:40"],
+  ["#120","Hyper Turbo - NL Super Stud Mix",6000,"22:15","23:40"],
+  ["#121","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/24":[
+  ["#122","Tuesday Towering Stack - Freezeout",16000,"11:00","15:45"],
+  ["#123","Mixed Games - Heads Up",16000,"11:05","11:15"],
+  ["#124","PL Omaha High - Big Bounty",16000,"11:15","15:55"],
+  ["#125","High Roller - Single Day",165000,"14:30","18:40"],
+  ["#126","Women's Event - Bounty",11000,"16:00","19:50"],
+  ["#127","Fixed Limit - Dealer's Choice (7 Card Stud)",16000,"16:30","19:40"],
+  ["#129","Turbo - NL Courchevel High",10000,"20:00","22:00"],
+  ["#131","Hyper Turbo - NL Triple Draw Mix",6000,"22:15","23:40"],
+  ["#132","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/25":[
+  ["#133","NL Hold'em - Heads Up (64 Cap)",16000,"11:05","11:15"],
+  ["#134","NL Hold'em - Freezeout (JOPT)",10000,"11:15","15:05"],
+  ["#135","Masters Big \"O\" - PL Omaha Hi-Lo",35000,"11:30","17:00"],
+  ["#136","Women's Event",11000,"15:00","18:50"],
+  ["#137","Fixed Limit - Octo Razz",10000,"16:15","19:25"],
+  ["#138","Masters - Home Games Deepstack",10000,"16:30","20:20"],
+  ["#139","Turbo - NL Drawmaha Mix",10000,"20:00","22:00"],
+  ["#141","Hyper Turbo Home Games - 2nd Best Hold'em",3500,"21:15","22:40"],
+  ["#142","Hyper Turbo - NL Bomb Pot Stud Mix",3500,"22:15","23:40"],
+  ["#143","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/26":[
+  ["#144","High Roller - Ultra Stack (Day 1)",80000,"11:15","22:10"],
+  ["#145","NL Hold'em - Freezeout",20000,"11:15","15:55"],
+  ["#146","Masters Fixed Limit Seven Card Stud",35000,"11:30","16:00"],
+  ["#148","Women's Event",10000,"15:00","18:50"],
+  ["#149","PL Drawmaha Mix",16000,"16:00","19:50"],
+  ["#150","NL Hold'em - 1 Re-Entry",13000,"16:30","20:20"],
+  ["#151","Turbo - NL Omaha Hi-Lo (Big O) Oceans",10000,"20:00","22:00"],
+  ["#153","Hyper Turbo Home Games - Double Board Red River",3500,"21:30","22:55"],
+  ["#154","Hyper Turbo - NL Triple Draw 2-7",6000,"22:15","23:40"],
+  ["#155","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/27":[
+  ["#156","NL Hold'em - Super Hold'em Deepstack",10000,"11:15","15:55"],
+  ["#157","Masters Dealer's Choice",35000,"11:30","16:00"],
+  ["#159","Women's Event",8000,"16:00","19:50"],
+  ["#160","PL Super Hold'em Hi-Lo 8 or Better",10000,"16:00","19:50"],
+  ["#161","NL Hold'em - 1 Re-Entry",16000,"17:00","20:50"],
+  ["#162","Turbo - NL Omaha High (Noah's Ark)",10000,"20:00","22:00"],
+  ["#163","Hyper Turbo Home Games - Cry Me A River",3500,"21:15","22:40"],
+  ["#164","Hyper Turbo - NL Dealer's Choice Triple Draw Mix",6000,"21:30","22:55"],
+  ["#165","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/28":[
+  ["#166","Saturday Super Stack - 1 Re-Entry",13000,"11:15","16:00"],
+  ["#167","Masters Big Bet",35000,"11:15","15:45"],
+  ["#169","High Roller - Ultra Stack (Day 1)",165000,"15:00","23:20"],
+  ["#170","Women's Event",8000,"15:45","19:35"],
+  ["#171","Fixed Limit - R-O-S-E-T",16000,"16:00","19:10"],
+  ["#172","Turbo - Saturday Night Special (Triple Stack)",10000,"18:30","20:45"],
+  ["#173","Turbo - NL Hi-Lo Dealer Button's Choice",10000,"20:00","22:00"],
+  ["#174","Hyper Turbo Home Games - Bomb Pot Double Board",3500,"21:15","22:40"],
+  ["#175","Hyper Turbo - NL Triple Draw (Super Badugi)",6000,"21:30","22:55"],
+  ["#176","Super Hyper Turbo - NLH",8000,"23:00","23:40"],
+],
+"11/29":[
+  ["#177","Sunday Super Stack",15000,"11:00","14:55"],
+  ["#178","High Roller - Last Chance",80000,"11:15","15:25"],
+  ["#179","Women's Event",6000,"11:30","15:20"],
+  ["#180","PL Omaha Hi-Lo (Big O)",16000,"11:45","15:35"],
+  ["#181","Turbo - NLH",10000,"16:00","18:00"],
+  ["#182","Turbo - High Roller",35000,"16:15","18:15"],
+  ["#183","Turbo - Women's Event",3500,"16:30","18:30"],
+  ["#184","Turbo - NL Omaha High",10000,"16:45","18:45"],
+  ["#185","Hyper Turbo - NLH",8000,"19:00","20:25"],
+  ["#186","Hyper Turbo - High Roller",25000,"19:15","20:40"],
+  ["#187","Hyper Turbo - Women's Event",3500,"19:30","20:55"],
+],
+};
+
+const sideEvents = [];
+Object.keys(sideRaw).forEach(day=>{
+  sideRaw[day].forEach(([id,name,fee,start,regClose,extra])=>{
+    sideEvents.push({id, day, name, fee, start, regClose, champ:false, ...(extra||{})});
+  });
+});
+
+const allEvents = [...champEvents, ...sideEvents].sort((a,b)=>{
+  const da = a.day.split('/').map(Number), db = b.day.split('/').map(Number);
+  if(da[1]!==db[1]) return da[1]-db[1];
+  // champ event first on same day, then side by numeric id
+  if(a.champ !== b.champ) return a.champ ? -1 : 1;
+  const na = parseInt((a.id.match(/\d+/)||[0])[0]);
+  const nb = parseInt((b.id.match(/\d+/)||[0])[0]);
+  return na-nb;
+});
+
+// ── type classification ──
+function classify(name){
+  const n = name.toLowerCase();
+  if(/mind sports/.test(n)) return 'OTHER';
+  if(/omaha|courchevel|drawmaha|big o/.test(n)) return 'PLO';
+  if(/fixed limit|dealer's choice|triple draw|stud|badugi|r-o-s-e-t|razz|8-game|9-game|mix|big bet|draw poker/.test(n)) return 'MIX';
+  return 'NLH';
+}
+allEvents.forEach(e=> e.type = classify(e.name));
+allEvents.forEach(e=> e.key = e.id + '|' + e.day);
+
+// ── fee tier ──
+function tierOf(fee){
+  if(fee<=15000) return 'MIN';
+  if(fee<=50000) return 'MID';
+  if(fee<=150000) return 'HR';
+  return 'SHR';
+}
+allEvents.forEach(e=> e.tier = tierOf(e.fee));
+allEvents.forEach(e=>{
+  const hasDayRange = e.days && /–/.test(e.days);
+  const hasDayLabelInName = /\(Day\s*1\)/i.test(e.name);
+  e.multiDay = !!(hasDayRange || hasDayLabelInName);
+  e.ladies = /women'?s/i.test(e.name);
+});
+
+const tierLabel = {MIN:'ミニマム (~15K)', MID:'ミドル (15K–50K)', HR:'ハイローラー (50K–150K)', SHR:'スーパーHR (150K~)'};
+const tierShort = {MIN:'MIN', MID:'MID', HR:'HR', SHR:'SHR'};
+
+const fees = allEvents.map(e=>e.fee);
+const minLog = Math.log(Math.min(...fees));
+const maxLog = Math.log(Math.max(...fees));
+
+function feeColor(fee){
+  const t = (Math.log(fee)-minLog)/(maxLog-minLog);
+  const blue=[91,155,240], red=[255,90,103], mid=[190,150,230];
+  let c1,c2,localT;
+  if(t<0.5){c1=blue;c2=mid;localT=t/0.5;}
+  else{c1=mid;c2=red;localT=(t-0.5)/0.5;}
+  const rgb = c1.map((v,i)=>Math.round(v+(c2[i]-v)*localT));
+  return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+}
+
+function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+
+// ── ブラインドストラクチャー推定（公式ストラクチャーシート非公開のため、イベント名・種別から推定）──
+function estimateStructure(e){
+  const n = e.name.toLowerCase();
+  if(/super hyper turbo/.test(n)) return {before:8, after:6};
+  if(/hyper turbo/.test(n)) return {before:10, after:8};
+  if(/turbo/.test(n)) return {before:15, after:12};
+  if(e.champ && e.multiDay) return {before:40, after:30};
+  if(e.champ) return {before:30, after:20};
+  return {before:20, after:15};
+}
+
+// ── 日程レンジ文字列 "11/13–15" を ["11/13","11/14","11/15"] に分解 ──
+function expandDayRange(str){
+  const m = str.match(/^(\d+)\/(\d+)–(\d+)$/);
+  if(!m) return [str];
+  const month = m[1], startDay = parseInt(m[2],10), endDay = parseInt(m[3],10);
+  const out = [];
+  for(let d=startDay; d<=endDay; d++) out.push(`${month}/${d}`);
+  return out;
+}
+
+const listEl = document.getElementById('list');
+const filtersTypeEl = document.getElementById('filtersType');
+const filtersTierEl = document.getElementById('filtersTier');
+const filtersDurationEl = document.getElementById('filtersDuration');
+const filtersAttrEl = document.getElementById('filtersAttr');
+const countEl = document.getElementById('count');
+const viewAllBtn = document.getElementById('viewAllBtn');
+const viewFavBtn = document.getElementById('viewFavBtn');
+const favCountEl = document.getElementById('favCount');
+
+let selectedTypes = new Set();
+let selectedTiers = new Set();
+let selectedDurations = new Set(); // values: 'MULTI','SINGLE'
+let selectedAttrs = new Set();     // values: 'LADIES'
+let viewMode = 'ALL'; // 'ALL' | 'FAV'
+let currency = 'TWD'; // 'TWD' | 'JPY'
+let favorites = new Set();
+let favLoaded = false;
+
+const currencyToggle = document.getElementById('currencyToggle');
+function updateCurrencyUI(){
+  currencyToggle.querySelectorAll('.cur-opt').forEach(el=>{
+    el.classList.toggle('active', el.dataset.cur === currency);
+  });
+}
+currencyToggle.addEventListener('click', ()=>{
+  currency = currency === 'TWD' ? 'JPY' : 'TWD';
+  updateCurrencyUI();
+  render();
+});
+updateCurrencyUI();
+
+const STAR_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
+
+function loadFavorites(){
+  try{
+    const raw = localStorage.getItem('apt-taipei-2026:favorites');
+    if(raw){
+      favorites = new Set(JSON.parse(raw));
+    }
+  }catch(err){
+    favorites = new Set();
+  }
+  favLoaded = true;
+  updateFavCount();
+  render();
+}
+
+function saveFavorites(){
+  try{
+    localStorage.setItem('apt-taipei-2026:favorites', JSON.stringify([...favorites]));
+  }catch(err){
+    console.error('お気に入りの保存に失敗しました', err);
+  }
+}
+
+function updateFavCount(){
+  favCountEl.textContent = favorites.size > 0 ? `(${favorites.size})` : '';
+}
+
+function toggleFavorite(key){
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  updateFavCount();
+  saveFavorites();
+  render();
+}
+
+viewAllBtn.addEventListener('click', ()=>{
+  viewMode = 'ALL';
+  viewAllBtn.classList.add('active');
+  viewFavBtn.classList.remove('active');
+  render();
+});
+viewFavBtn.addEventListener('click', ()=>{
+  viewMode = 'FAV';
+  viewFavBtn.classList.add('active');
+  viewAllBtn.classList.remove('active');
+  render();
+});
+
+function render(){
+  listEl.innerHTML = '';
+
+  if(!favLoaded){
+    listEl.innerHTML = '<div class="empty">読み込み中…</div>';
+    return;
+  }
+
+  let source = allEvents;
+  if(viewMode === 'FAV'){
+    source = allEvents.filter(e=>favorites.has(e.key));
+  }
+
+  const filtered = source.filter(e=>
+    (selectedTypes.size===0 || selectedTypes.has(e.type)) &&
+    (selectedTiers.size===0 || selectedTiers.has(e.tier)) &&
+    (selectedDurations.size===0 || selectedDurations.has(e.multiDay ? 'MULTI' : 'SINGLE')) &&
+    (selectedAttrs.size===0 || (selectedAttrs.has('LADIES') && e.ladies))
+  );
+
+  countEl.innerHTML = viewMode==='FAV'
+    ? `<b>${filtered.length}</b> 件のお気に入り`
+    : `<b>${filtered.length}</b> / ${allEvents.length} イベント表示中`;
+
+  if(filtered.length===0){
+    listEl.innerHTML = viewMode==='FAV'
+      ? '<div class="empty">★ボタンをタップしてお気に入りに追加しよう</div>'
+      : '<div class="empty">該当するイベントがありません</div>';
+    return;
+  }
+
+  let lastDay = null;
+  filtered.forEach(e=>{
+    if(e.day !== lastDay){
+      const h = document.createElement('div');
+      h.className = 'day-head';
+      h.textContent = e.day;
+      listEl.appendChild(h);
+      lastDay = e.day;
+    }
+    const row = document.createElement('div');
+    row.className = 'row' + (e.multiDay ? ' multi-day' : '');
+    const color = feeColor(e.fee);
+    const jpy = fmt(e.fee * RATE);
+    const twd = fmt(e.fee);
+    const mainAmount = currency === 'TWD' ? `TWD ${twd}` : `¥${jpy}`;
+    const subAmount = currency === 'TWD' ? `≈¥${jpy}` : `≈TWD ${twd}`;
+    const isFav = favorites.has(e.key);
+    const structure = estimateStructure(e);
+    const dayList = e.multiDay && e.days ? expandDayRange(e.days) : null;
+    const dayListHtml = dayList
+      ? dayList.map((d,i)=>`<div class="flight-line">Day ${i+1}（${d}）${i===0 ? ' ・ この日にエントリー開始' : ''}</div>`).join('')
+      : `<div class="flight-line">${e.days || e.day}</div>`;
+    row.innerHTML = `
+      <div class="row-head" style="--dotcolor:${color}">
+        <span class="num">${e.id}</span>
+        <span class="fee-dot" style="background:${color}"></span>
+        <div class="row-main">
+          <div class="row-title">${e.name} <span class="tag ${e.type}">${e.type}</span>${e.multiDay ? '<span class="tag MULTI">2Days+</span>' : ''}${e.ladies ? '<span class="tag LADIES">Ladies</span>' : ''}</div>
+          <div class="row-sub">${e.start ? '⏱ '+e.start+' start' : ''}${e.champ ? ' · メインシリーズ' : ''}${e.gtd ? ' · GTD '+e.gtd : ''}</div>
+        </div>
+        <div class="fee" style="color:${color}">${mainAmount}<small>${subAmount}</small></div>
+        <button class="star-btn${isFav ? ' fav':''}" aria-label="お気に入り">${STAR_ICON}</button>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="detail">
+        <div class="detail-inner">
+          <dl class="detail-grid">
+            <dt>日程</dt><dd>${dayListHtml}</dd>
+            ${e.start ? `<dt>スタート</dt><dd>${e.start}</dd>` : ''}
+            ${e.regClose ? `<dt>レイトレジ締切</dt><dd>${e.regClose}${e.regClose < e.start ? '（翌日）' : ''}</dd>` : ''}
+            <dt>フィー帯</dt><dd>${tierLabel[e.tier]}</dd>
+            <dt>円換算</dt><dd>${currency==='TWD' ? `約 ¥${jpy}（TWD ${twd} × ${RATE}）` : `原価 TWD ${twd}（¥${jpy} ÷ ${RATE}）`}</dd>
+            ${e.gtd ? `<dt>GTD</dt><dd>TWD ${e.gtd}</dd>` : ''}
+            <dt>ブラインド</dt><dd>${structure.before}分ブラインド／レイト前:${structure.before}分, レイト後:${structure.after}分<br><span style="font-size:10px;color:var(--ink-faint)">※公式未発表のため種別からの推定値</span></dd>
+            ${e.note ? `<dt>メモ</dt><dd>${e.note}</dd>` : ''}
+          </dl>
+        </div>
+      </div>
+    `;
+    const head = row.querySelector('.row-head');
+    head.addEventListener('click', (ev)=>{
+      if(ev.target.closest('.star-btn')) return;
+      const wasOpen = row.classList.contains('open');
+      document.querySelectorAll('.row.open').forEach(r=>r.classList.remove('open'));
+      if(!wasOpen) row.classList.add('open');
+    });
+    row.querySelector('.star-btn').addEventListener('click', (ev)=>{
+      ev.stopPropagation();
+      toggleFavorite(e.key);
+    });
+    listEl.appendChild(row);
+  });
+}
+
+function makeMultiFilterRow(container, options, selectedSet){
+  container.innerHTML = '';
+  // options[0] is always the "すべて" (clear) option
+  const [allVal, allLabel] = options[0];
+  options.forEach(([val,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip-btn';
+    btn.textContent = label;
+    btn.dataset.val = val;
+    container.appendChild(btn);
+    btn.addEventListener('click', ()=>{
+      if(val === allVal){
+        selectedSet.clear();
+      }else{
+        if(selectedSet.has(val)) selectedSet.delete(val);
+        else selectedSet.add(val);
+      }
+      refreshChips();
+      render();
+    });
+  });
+  function refreshChips(){
+    container.querySelectorAll('.chip-btn').forEach(btn=>{
+      const v = btn.dataset.val;
+      const isActive = v === allVal ? selectedSet.size===0 : selectedSet.has(v);
+      btn.classList.toggle('active', isActive);
+    });
+  }
+  refreshChips();
+}
+
+makeMultiFilterRow(filtersTypeEl,
+  [['ALL','すべて'],['NLH','NLH'],['PLO','PLO'],['MIX','MIX'],['OTHER','その他']],
+  selectedTypes);
+
+makeMultiFilterRow(filtersTierEl,
+  [['ALL','すべて'],['MIN','MIN ~15K'],['MID','MID 15–50K'],['HR','HR 50–150K'],['SHR','SHR 150K~']],
+  selectedTiers);
+
+makeMultiFilterRow(filtersDurationEl,
+  [['ALL','すべて'],['MULTI','2Days+ のみ'],['SINGLE','単日のみ']],
+  selectedDurations);
+
+makeMultiFilterRow(filtersAttrEl,
+  [['ALL','すべて'],['LADIES','レディース限定']],
+  selectedAttrs);
+
+favLoaded = true;
+render();
+loadFavorites();
+</script>
+</body>
+</html>
